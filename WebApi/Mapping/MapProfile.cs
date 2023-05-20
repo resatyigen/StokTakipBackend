@@ -18,6 +18,12 @@ namespace WebApi.Mapping
             CreateMap<ProductDto, Product>();
             CreateMap<Category, CategoryWithProductDto>();
             CreateMap<CategoryWithProductDto, Category>();
+            CreateMap<User, RegisterUserDto>();
+            CreateMap<RegisterUserDto, User>();
+            CreateMap<Category, AddCategoryDto>();
+            CreateMap<AddCategoryDto, Category>();
+            CreateMap<Product, AddProductDto>();
+            CreateMap<AddProductDto, Product>();
         }
     }
 }
