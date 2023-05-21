@@ -35,7 +35,7 @@ namespace WebApi.Controllers
         [Route("List")]
         public async Task<IActionResult> List()
         {
-            string? userId = User.FindFirst(ClaimTypes.Name)?.Value;
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId == null)
             {
@@ -52,7 +52,7 @@ namespace WebApi.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> AddCategory([FromForm] AddCategoryDto model)
         {
-            string? userId = User.FindFirst(ClaimTypes.Name)?.Value;
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId == null)
             {
@@ -87,7 +87,7 @@ namespace WebApi.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> EditCategory([FromForm] EditCategoryDto model)
         {
-            string? userId = User.FindFirst(ClaimTypes.Name)?.Value;
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId == null)
             {
@@ -136,7 +136,7 @@ namespace WebApi.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> DeleteCategory([FromQuery] int ID)
         {
-            string? userId = User.FindFirst(ClaimTypes.Name)?.Value;
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId == null)
             {
@@ -155,7 +155,7 @@ namespace WebApi.Controllers
                 return BadRequest("ERR_CATEGORY_ACCESS_DENIED");
             }
 
-            categoryService.DeleteAsync(deletedCategory);
+            categoryService.Delete(deletedCategory);
 
             return Ok(new { status = "SUCCESS" });
         }

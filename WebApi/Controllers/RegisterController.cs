@@ -14,7 +14,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class RegisterController : Controller
+    public class RegisterController : ControllerBase
     {
 
         private readonly IUserService userService;
@@ -38,17 +38,21 @@ namespace WebApi.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> RegisterUser(RegisterUserDto model)
         {
-            // Burada kullanıcı adı ve email kontrolü yapılacak
+            if (await userService.CheckUserName(model.UserName))
+            {
+                return BadRequest("ERR_USERNAME_FOUND");
+            }
+
+            if (await userService.CheckEmail(model.Email))
+            {
+                return BadRequest("ERR_EMAIL_FOUND");
+            }
+
             string passwordHash = hash.CreateHash(model.Password);
             model.Password = passwordHash;
 
             var mappedUserModel = mapper.Map<User>(model);
             var newUser = await userService.AddAsync(mappedUserModel);
-
-            Console.WriteLine($"UserName : {model.UserName}");
-            Console.WriteLine($"FullName : {model.FullName}");
-            Console.WriteLine($"Email : {model.Email}");
-            Console.WriteLine($"Password : {model.Password}");
 
             return Ok(new { status = "SUCCESS", result = newUser });
         }

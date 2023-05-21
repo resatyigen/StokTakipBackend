@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Business.Abstract;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Dto;
 using WebApi.Validation;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ProductController : ControllerBase
@@ -38,7 +40,7 @@ namespace WebApi.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> ListByCategoryId([FromQuery] int categoryID)
         {
-            string? userId = User.FindFirst(ClaimTypes.Name)?.Value;
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId == null)
             {
@@ -70,7 +72,7 @@ namespace WebApi.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> List()
         {
-            string? userId = User.FindFirst(ClaimTypes.Name)?.Value;
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId == null)
             {
@@ -91,7 +93,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> AddProduct([FromForm] AddProductDto model)
         {
 
-            string? userId = User.FindFirst(ClaimTypes.Name)?.Value;
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId == null)
             {
@@ -107,7 +109,7 @@ namespace WebApi.Controllers
 
             if (checkCategory.UserID != int.Parse(userId))
             {
-                return BadRequest("ERR_CATEGORY_ACCESS_DENIED");
+                return BadRequest("ERR_PRODUCT_ACCESS_DENIED");
             }
 
             string imagePath = "";
@@ -130,6 +132,109 @@ namespace WebApi.Controllers
             var newProduct = await productService.AddAsync(mappedProduct);
 
             return Ok(new { status = "SUCCESS", result = newProduct });
+        }
+
+        [HttpPut]
+        [Route("Edit")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> EditProduct([FromForm] EditProductDto model)
+        {
+
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return BadRequest("ERR_USER_ID");
+            }
+
+            var updatedProduct = await productService.GetWithCategoryAsync(model.ID);
+
+            if (updatedProduct == null)
+            {
+                return BadRequest("ERR_PRODUCT_NOT_FOUND");
+            }
+
+            if (updatedProduct.Category == null)
+            {
+                return BadRequest("ERR_CATEGORY_NOT_FOUND");
+            }
+
+            if (updatedProduct.Category.UserID != int.Parse(userId))
+            {
+                return BadRequest("ERR_PRODUCT_ACCESS_DENIED");
+            }
+
+            if (updatedProduct.CategoryID != model.CategoryID)
+            {
+                var productCategory = await categoryService.GetAsync(model.CategoryID);
+                if (productCategory == null)
+                {
+                    return BadRequest("ERR_CATEGORY_NOT_FOUND");
+                }
+
+                if (productCategory.UserID != int.Parse(userId))
+                {
+                    return BadRequest("ERR_CATEGORY_ACCESS_DENIED");
+                }
+            }
+
+            string imagePath = "";
+
+            if (model.ImageFile != null)
+            {
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "images", model.ImageFile.FileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await model.ImageFile.CopyToAsync(stream);
+                }
+
+                imagePath = model.ImageFile.FileName;
+                updatedProduct.ImagePath = imagePath;
+            }
+
+            updatedProduct.ProductName = model.ProductName;
+            updatedProduct.Description = model.Description;
+            updatedProduct.ProductUrl = model.ProductUrl;
+            updatedProduct.Quantity = model.Quantity;
+            updatedProduct.CategoryID = model.CategoryID;
+
+            var upProduct = await productService.UpdateAsync(updatedProduct);
+
+            var mappingProduct = mapper.Map<ProductDto>(updatedProduct);
+
+            return Ok(new { status = "SUCCESS", result = mappingProduct });
+        }
+
+
+        [HttpDelete]
+        [Route("Delete")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> DeleteProduct([FromQuery] int ID)
+        {
+
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return BadRequest("ERR_USER_ID");
+            }
+
+            var deletedProduct = await productService.GetWithCategoryAsync(ID);
+
+            if (deletedProduct == null)
+            {
+                return BadRequest("ERR_PRODUCT_NOT_FOUND");
+            }
+
+            if (deletedProduct.Category.UserID != int.Parse(userId))
+            {
+                return BadRequest("ERR_PRODUCT_ACCESS_DENIED");
+            }
+
+            productService.Delete(deletedProduct);
+
+            return Ok(new { status = "SUCCESS" });
         }
 
     }
