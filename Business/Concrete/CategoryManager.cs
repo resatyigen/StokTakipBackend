@@ -22,6 +22,11 @@ namespace Business.Concrete
             return _categoryDal.AddAsync(category);
         }
 
+        public void Delete(Category category)
+        {
+            _categoryDal.Delete(category);
+        }
+
         public Task<List<Category>> GetAllAsync(int userID)
         {
             return _categoryDal.GetAllAsync(x => x.UserID == userID);
@@ -30,18 +35,16 @@ namespace Business.Concrete
         public Task<List<Category>> GetAllWithProductAsync(int userID)
         {
             return _categoryDal.GetAllWithProductAsync(userID);
-            // return categoryList.Select(x => new Category()
-            // {
-            //     ID = x.ID,
-            //     CategoryName = x.CategoryName,
-            //     Description = x.Description,
-            //     Color = x.Color,
-            //     ImagePath = x.ImagePath,
-            //     UserID = x.UserID,
-            //     CreateDate = x.CreateDate,
-            //     Products = x.Products.ToList()
-            // }).ToList();
+        }
 
+        public Task<Category> GetAsync(int id)
+        {
+            return _categoryDal.GetAsync(x => x.ID == id);
+        }
+
+        public Task<Category> UpdateAsync(Category category)
+        {
+            return _categoryDal.UpdateAsync(category);
         }
     }
 }

@@ -22,9 +22,26 @@ namespace Business.Concrete
             return _userDal.AddAsync(user);
         }
 
+        public async Task<bool> CheckEmail(string email)
+        {
+            var user = await _userDal.GetAsync(x => x.Email == email);
+            return user != null;
+        }
+
+        public async Task<bool> CheckUserName(string userName)
+        {
+            var user = await _userDal.GetAsync(x => x.UserName == userName);
+            return user != null;
+        }
+
         public Task<List<User>> GetAllAsync()
         {
             return _userDal.GetAllAsync();
+        }
+
+        public Task<User> GetUserByUsernameAndPassword(string userName, string password)
+        {
+            return _userDal.GetAsync(x => x.UserName == userName && x.Password == password);
         }
     }
 }

@@ -9,6 +9,9 @@ namespace Business.Abstract
     public interface IUserService
     {
         Task<List<User>> GetAllAsync();
+        Task<User> GetUserByUsernameAndPassword(string userName, string password);
         Task<User> AddAsync(User user);
+        Task<bool> CheckUserName(string userName);
+        Task<bool> CheckEmail(string email);
     }
 }

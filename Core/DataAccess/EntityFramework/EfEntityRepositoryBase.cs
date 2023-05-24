@@ -26,7 +26,7 @@ namespace Core.DataAccess.EntityFramework
             }
         }
 
-        public void DeleteAsync(TEntity entity)
+        public void Delete(TEntity entity)
         {
             using (TContext context = new TContext())
             {

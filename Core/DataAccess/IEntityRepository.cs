@@ -13,6 +13,6 @@ namespace Core.DataAccess
         Task<T> GetAsync(Expression<Func<T, bool>> filter);
         Task<T> AddAsync(T entity);
         Task<T> UpdateAsync(T entity);
-        void DeleteAsync(T entity);
+        void Delete(T entity);
     }
 }

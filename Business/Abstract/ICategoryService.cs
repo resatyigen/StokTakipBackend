@@ -11,5 +11,8 @@ namespace Business.Abstract
         Task<List<Category>> GetAllAsync(int userID);
         Task<List<Category>> GetAllWithProductAsync(int userID);
         Task<Category> AddAsync(Category category);
+        Task<Category> GetAsync(int id);
+        Task<Category> UpdateAsync(Category category);
+        void Delete(Category category);
     }
 }

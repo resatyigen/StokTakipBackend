@@ -13,8 +13,6 @@ namespace DataAccess.Concrete
         {
             var connectionString = "server=localhost;port=3306;database=StockTracking;user=local;password=123456";
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-
-            
         }
 
         public DbSet<User> Users { get; set; }
