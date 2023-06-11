@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.FileProviders;
+using DataAccess.Concrete;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,12 @@ builder.Services.AddSingleton<IProductDal, EfProductDal>();
 
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
+
+// builder.Services.AddDbContext<StockTrackingContext>(options =>
+// {
+//     var connectionString = "server=localhost;port=3306;database=StockTracking;user=local;password=123456";
+//     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+// });
 
 
 var appSettings = appSettingsSection.Get<AppSettings>();

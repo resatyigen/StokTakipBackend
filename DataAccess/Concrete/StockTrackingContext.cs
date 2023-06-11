@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace DataAccess.Concrete
 {
@@ -11,7 +12,10 @@ namespace DataAccess.Concrete
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionString = "server=localhost;port=3306;database=StockTracking;user=local;password=123456";
+            IConfigurationBuilder builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", false, true);
+            IConfigurationRoot root = builder.Build();
+
+            var connectionString = root["AppSettings:MysqlConnectionString"];
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         }
 

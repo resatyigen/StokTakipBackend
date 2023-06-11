@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Abstract;
+using Core.Constants;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,33 @@ namespace WebApi.Controllers
             this.productService = productService;
             this.categoryService = categoryService;
             this.mapper = mapper;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] int ID)
+        {
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return BadRequest("ERR_USER_ID");
+            }
+
+            var product = await productService.GetWithCategoryAsync(ID);
+
+            if (product == null)
+            {
+                return BadRequest("ERR_PRODUCT_NOT_FOUND");
+            }
+
+            if (product.Category.UserID != int.Parse(userId))
+            {
+                return BadRequest("ERR_PRODUCT_ACCESS_DENIED");
+            }
+
+            var mappedProduct = mapper.Map<ProductDto>(product);
+
+            return Ok(new { status = "SUCCESS", result = mappedProduct });
         }
 
 
@@ -84,6 +112,30 @@ namespace WebApi.Controllers
             var mappedProductList = mapper.Map<List<ProductDto>>(productList);
 
             return Ok(mappedProductList);
+        }
+
+        [HttpGet]
+        [Route("FilterList")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> GetFilterList([FromQuery] GetProductListDto model)
+        {
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return BadRequest("ERR_USER_ID");
+            }
+
+
+            int skip = model.RowsPerPage * model.Page;
+            int take = model.RowsPerPage * (model.Page + 1);
+            Order order = model.Order == "desc" ? Order.DESC : Order.ASC;
+
+            var products = await productService.GetAllByFilter(int.Parse(userId), model.CategoryID, model.ProductName, order, skip, take);
+
+            var mappedProductList = mapper.Map<WebApi.Dto.ProductListDto>(products);
+
+            return Ok(new { status = "SUCCESS", result = mappedProductList });
         }
 
 

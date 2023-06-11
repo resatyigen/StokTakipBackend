@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Abstract;
+using Core.Constants;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.Dto;
 
 namespace Business.Concrete
 {
@@ -30,6 +32,11 @@ namespace Business.Concrete
         public Task<List<Category>> GetAllAsync(int userID)
         {
             return _categoryDal.GetAllAsync(x => x.UserID == userID);
+        }
+
+        public Task<CategoryListDto> GetAllByFilter(int userID, string categoryName, Order order, int skip, int take)
+        {
+            return _categoryDal.GetAllByFilter(userID, categoryName, order, skip, take);
         }
 
         public Task<List<Category>> GetAllWithProductAsync(int userID)

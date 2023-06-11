@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Business.Abstract;
+using Core.Constants;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,32 @@ namespace WebApi.Controllers
         }
 
 
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] int ID)
+        {
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return BadRequest("ERR_USER_ID");
+            }
+
+            var category = await categoryService.GetAsync(ID);
+
+            if (category == null)
+            {
+                return BadRequest("ERR_CATEGORY_NOT_FOUND");
+            }
+
+            if (category.UserID != int.Parse(userId))
+            {
+                return BadRequest("ERR_CATEGORY_ACCESS_DENIED");
+            }
+
+            return Ok(new { status = "SUCCESS", result = category });
+        }
+
         [HttpGet]
         [Route("List")]
         public async Task<IActionResult> List()
@@ -45,6 +72,26 @@ namespace WebApi.Controllers
             var categoryList = await categoryService.GetAllAsync(int.Parse(userId));
 
             return Ok(new { status = "SUCCESS", result = categoryList });
+        }
+
+        [HttpGet]
+        [Route("FilterList")]
+        public async Task<IActionResult> GetFilterList([FromQuery] GetCategoryListDto model)
+        {
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return BadRequest("ERR_USER_ID");
+            }
+
+            int skip = model.RowsPerPage * model.Page;
+            int take = model.RowsPerPage * (model.Page + 1);
+            Order order = model.Order == "desc" ? Order.DESC : Order.ASC;
+
+            var categories = await categoryService.GetAllByFilter(int.Parse(userId), model.CategoryName, order, skip, take);
+
+            return Ok(new { status = "SUCCESS", result = categories });
         }
 
         [HttpPost]
