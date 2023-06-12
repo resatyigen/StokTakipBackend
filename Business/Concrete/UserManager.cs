@@ -34,6 +34,11 @@ namespace Business.Concrete
             return user != null;
         }
 
+        public Task<User> GetAsync(int id)
+        {
+            return _userDal.GetAsync(x => x.ID == id);
+        }
+
         public Task<List<User>> GetAllAsync()
         {
             return _userDal.GetAllAsync();
@@ -42,6 +47,11 @@ namespace Business.Concrete
         public Task<User> GetUserByUsernameAndPassword(string userName, string password)
         {
             return _userDal.GetAsync(x => x.UserName == userName && x.Password == password);
+        }
+
+        public Task<User> UpdateAsync(User user)
+        {
+            return _userDal.UpdateAsync(user);
         }
     }
 }

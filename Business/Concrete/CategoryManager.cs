@@ -34,7 +34,7 @@ namespace Business.Concrete
             return _categoryDal.GetAllAsync(x => x.UserID == userID);
         }
 
-        public Task<CategoryListDto> GetAllByFilter(int userID, string categoryName, Order order, int skip, int take)
+        public Task<CategoryListDto> GetAllByFilter(int userID, string? categoryName, Order order, int skip, int take)
         {
             return _categoryDal.GetAllByFilter(userID, categoryName, order, skip, take);
         }

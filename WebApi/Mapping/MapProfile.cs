@@ -28,6 +28,8 @@ namespace WebApi.Mapping
             CreateMap<Entities.Dto.ProductListDto, WebApi.Dto.ProductListDto>();
             CreateMap<Product, ProductWithCategoryDto>();
             CreateMap<ProductWithCategoryDto, Product>();
+            CreateMap<User, GetUserDto>();
+            CreateMap<GetUserDto, User>();
         }
     }
 }

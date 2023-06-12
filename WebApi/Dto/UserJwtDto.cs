@@ -8,6 +8,6 @@ namespace WebApi.Dto
     public class UserJwtDto
     {
         public int ID { get; set; }
-        public string UserName { get; set; }
+        public string UserName { get; set; } = string.Empty;
     }
 }

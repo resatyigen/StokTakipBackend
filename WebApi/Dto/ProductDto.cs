@@ -9,7 +9,7 @@ namespace WebApi.Dto
     {
         public int ID { get; set; }
         public int CategoryID { get; set; }
-        public string ProductName { get; set; }
+        public string ProductName { get; set; } = string.Empty;
         public string? ImagePath { get; set; }
         public string? Description { get; set; }
         public string? ProductUrl { get; set; }

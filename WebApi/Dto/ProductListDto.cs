@@ -8,6 +8,11 @@ namespace WebApi.Dto
 {
     public class ProductListDto
     {
+        public ProductListDto()
+        {
+            ProductList = new List<ProductWithCategoryDto>();
+        }
+
         public List<ProductWithCategoryDto> ProductList { get; set; }
         public int ListSize { get; set; }
     }

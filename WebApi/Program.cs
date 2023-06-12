@@ -48,9 +48,13 @@ builder.Services.Configure<AppSettings>(appSettingsSection);
 
 
 var appSettings = appSettingsSection.Get<AppSettings>();
-var key = Encoding.UTF8.GetBytes(appSettings.Secret);
+byte[] key = new byte[20];
+if (appSettings != null)
+{
+    key = Encoding.UTF8.GetBytes(appSettings.Secret);
+}
 
-Console.WriteLine("Secret : " + appSettings.Secret);
+//Console.WriteLine("Secret : " + appSettings.Secret);
 
 builder.Services.AddAuthentication(x =>
 {
@@ -69,6 +73,10 @@ builder.Services.AddAuthentication(x =>
         ValidateLifetime = true
     };
 });
+
+builder.Services.AddCors(options =>
+     options.AddDefaultPolicy(builder =>
+     builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
 var app = builder.Build();
 

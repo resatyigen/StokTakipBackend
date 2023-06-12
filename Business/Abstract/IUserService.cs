@@ -10,8 +10,10 @@ namespace Business.Abstract
     {
         Task<List<User>> GetAllAsync();
         Task<User> GetUserByUsernameAndPassword(string userName, string password);
+        Task<User> GetAsync(int id);
         Task<User> AddAsync(User user);
         Task<bool> CheckUserName(string userName);
         Task<bool> CheckEmail(string email);
+        Task<User> UpdateAsync(User user);
     }
 }

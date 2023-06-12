@@ -18,6 +18,5 @@ namespace Business.Abstract
         Task<Product> GetWithCategoryAsync(int ID);
         Task<Product> UpdateAsync(Product product);
         void Delete(Product product);
-
     }
 }

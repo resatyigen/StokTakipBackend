@@ -8,6 +8,11 @@ namespace WebApi.Dto
 
     public class CategoryWithProductDto : CategoryDto
     {
+        public CategoryWithProductDto()
+        {
+            Products = new List<ProductDto>();
+        }
+
         public ICollection<ProductDto> Products { get; set; }
     }
 }

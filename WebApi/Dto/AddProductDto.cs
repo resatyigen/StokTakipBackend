@@ -13,7 +13,7 @@ namespace WebApi.Dto
 
         [MinLength(3, ErrorMessage = "ERR_MIN_LENGTH_3")]
         [MaxLength(100, ErrorMessage = "ERR_MAX_LENGTH_100")]
-        public string ProductName { get; set; }
+        public string ProductName { get; set; } = string.Empty;
 
         [MaxLength(500, ErrorMessage = "ERR_MAX_LENGTH_500")]
         public string? Description { get; set; }

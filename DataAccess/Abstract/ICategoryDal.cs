@@ -13,6 +13,6 @@ namespace DataAccess.Abstract
     {
         Task<List<Category>> GetAllWithProductAsync(int userId);
 
-        Task<CategoryListDto> GetAllByFilter(int userId, string categoryName, Order order, int skip, int take);
+        Task<CategoryListDto> GetAllByFilter(int userId, string? categoryName, Order order, int skip, int take);
     }
 }

@@ -14,7 +14,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfCategoryDal : EfEntityRepositoryBase<Category, StockTrackingContext>, ICategoryDal
     {
-        public async Task<CategoryListDto> GetAllByFilter(int userId, string categoryName, Order order, int skip, int take)
+        public async Task<CategoryListDto> GetAllByFilter(int userId, string? categoryName, Order order, int skip, int take)
         {
             using (var context = new StockTrackingContext())
             {

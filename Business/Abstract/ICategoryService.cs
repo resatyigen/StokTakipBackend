@@ -11,7 +11,7 @@ namespace Business.Abstract
     public interface ICategoryService
     {
         Task<List<Category>> GetAllAsync(int userID);
-        Task<CategoryListDto> GetAllByFilter(int userID, string categoryName, Order order, int skip, int take);
+        Task<CategoryListDto> GetAllByFilter(int userID, string? categoryName, Order order, int skip, int take);
         Task<List<Category>> GetAllWithProductAsync(int userID);
         Task<Category> AddAsync(Category category);
         Task<Category> GetAsync(int id);

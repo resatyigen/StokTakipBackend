@@ -7,6 +7,11 @@ namespace WebApi.Dto
 {
     public class ProductWithCategoryDto : ProductDto
     {
+        public ProductWithCategoryDto()
+        {
+            Category = new CategoryDto();
+        }
+
         public CategoryDto Category { get; set; }
     }
 }

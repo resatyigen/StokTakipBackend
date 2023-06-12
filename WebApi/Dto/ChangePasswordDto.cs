@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace WebApi.Dto
 {
-    public class LoginDto
+    public class ChangePasswordDto
     {
-        [Required(ErrorMessage = "ERR_REQUIRED")]
-        [MinLength(4, ErrorMessage = "ERR_MIN_LENGTH_4")]
-        [MaxLength(20, ErrorMessage = "ERR_MAX_LENGTH_20")]
-        public string UserName { get; set; } = string.Empty;
-
         [Required(ErrorMessage = "ERR_REQUIRED")]
         [MinLength(8, ErrorMessage = "ERR_MIN_LENGTH_8")]
         [MaxLength(30, ErrorMessage = "ERR_MAX_LENGTH_30")]
