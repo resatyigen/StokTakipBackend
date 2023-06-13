@@ -76,14 +76,17 @@ namespace WebApi.Controllers
 
             if (model.ImageFile != null)
             {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "images", model.ImageFile.FileName);
+                var fileName = Path.GetFileName(model.ImageFile.FileName);
+                var rondomFileName = Guid.NewGuid() + fileName;
+
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "images", rondomFileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await model.ImageFile.CopyToAsync(stream);
                 }
 
-                user.PhotoPath = model.ImageFile.FileName;
+                user.PhotoPath = rondomFileName;
             }
 
             user.FullName = model.FullName;

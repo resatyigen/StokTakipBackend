@@ -94,10 +94,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
-app.UseCors(x => x
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
+app.UseCors();
 
 
 string imagegesPath = Path.Combine(Directory.GetCurrentDirectory(), @"images");

@@ -12,7 +12,7 @@ namespace WebApi.Dto
         public int CategoryID { get; set; }
 
         [MinLength(3, ErrorMessage = "ERR_MIN_LENGTH_3")]
-        [MaxLength(100, ErrorMessage = "ERR_MAX_LENGTH_100")]
+        [MaxLength(200, ErrorMessage = "ERR_MAX_LENGTH_200")]
         public string ProductName { get; set; } = string.Empty;
 
         [MaxLength(500, ErrorMessage = "ERR_MAX_LENGTH_500")]

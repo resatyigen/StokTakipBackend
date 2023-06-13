@@ -168,14 +168,17 @@ namespace WebApi.Controllers
 
             if (model.ImageFile != null)
             {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "images", model.ImageFile.FileName);
+                var fileName = Path.GetFileName(model.ImageFile.FileName);
+                var rondomFileName = Guid.NewGuid() + fileName;
+
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "images", rondomFileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await model.ImageFile.CopyToAsync(stream);
                 }
 
-                imagePath = model.ImageFile.FileName;
+                imagePath = rondomFileName;
             }
 
             var mappedProduct = mapper.Map<Product>(model);
@@ -234,14 +237,17 @@ namespace WebApi.Controllers
 
             if (model.ImageFile != null)
             {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "images", model.ImageFile.FileName);
+                var fileName = Path.GetFileName(model.ImageFile.FileName);
+                var rondomFileName = Guid.NewGuid() + fileName;
+
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "images", rondomFileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await model.ImageFile.CopyToAsync(stream);
                 }
 
-                imagePath = model.ImageFile.FileName;
+                imagePath = rondomFileName;
                 updatedProduct.ImagePath = imagePath;
             }
 

@@ -28,6 +28,8 @@ images/
 *.userosscache
 *.sln.docstates
 
+dokuman.*
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
