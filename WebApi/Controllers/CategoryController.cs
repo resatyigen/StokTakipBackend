@@ -86,7 +86,7 @@ namespace WebApi.Controllers
             }
 
             int skip = model.RowsPerPage * model.Page;
-            int take = model.RowsPerPage * (model.Page + 1);
+            int take = model.RowsPerPage;
             Order order = model.Order == "desc" ? Order.DESC : Order.ASC;
 
             var categories = await categoryService.GetAllByFilter(int.Parse(userId), model.CategoryName, order, skip, take);

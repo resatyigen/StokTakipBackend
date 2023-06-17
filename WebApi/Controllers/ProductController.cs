@@ -128,7 +128,7 @@ namespace WebApi.Controllers
 
 
             int skip = model.RowsPerPage * model.Page;
-            int take = model.RowsPerPage * (model.Page + 1);
+            int take = model.RowsPerPage;
             Order order = model.Order == "desc" ? Order.DESC : Order.ASC;
 
             var products = await productService.GetAllByFilter(int.Parse(userId), model.CategoryID, model.ProductName, order, skip, take);
@@ -262,6 +262,44 @@ namespace WebApi.Controllers
             var mappingProduct = mapper.Map<ProductDto>(updatedProduct);
 
             return Ok(new { status = "SUCCESS", result = mappingProduct });
+        }
+
+
+        [HttpPut]
+        [Route("UpdateQuantity")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> UpdateQuantity([FromForm] UpdateQuantityDto model)
+        {
+
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return BadRequest("ERR_USER_ID");
+            }
+
+            var updatedProduct = await productService.GetWithCategoryAsync(model.ProductID);
+
+            if (updatedProduct == null)
+            {
+                return BadRequest("ERR_PRODUCT_NOT_FOUND");
+            }
+
+            if (updatedProduct.Category == null)
+            {
+                return BadRequest("ERR_CATEGORY_NOT_FOUND");
+            }
+
+            if (updatedProduct.Category.UserID != int.Parse(userId))
+            {
+                return BadRequest("ERR_PRODUCT_ACCESS_DENIED");
+            }
+
+            updatedProduct.Quantity = model.Quantity;
+
+            await productService.UpdateAsync(updatedProduct);
+
+            return Ok(new { status = "SUCCESS" });
         }
 
 
